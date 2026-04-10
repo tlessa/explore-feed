@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wikipedia - For You Feed</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+  <!-- Material Symbols Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+  
+  <!-- Custom Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'roboto': ['Roboto', 'sans-serif'],
+            'roboto-mono': ['Roboto Mono', 'monospace'],
+          },
+          colors: {
+            // CUSTOMIZE: Main color palette
+            'primary': '#f8f9fa',       // Primary text color (light)
+            'secondary': '#c8ccd1',     // Secondary text color (gray)
+            'paper': '#000000',         // Background color (dark)
+            'progressive': '#6699ff',   // Active/highlight color (blue)
+            'border-color': '#2e3136',  // Border color
+            'placeholder': '#c8ccd1',   // Placeholder text
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Base styles */
+    * { box-sizing: border-box; }
+    body { font-family: 'Roboto', sans-serif; }
+    
+    /* Swipe feed styles */
+    .feed-container {
+      touch-action: none;
+    }
+    .feed-slide {
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+    }
+    /* Vertical transitions (up/down - category change) */
+    .feed-slide.slide-out-up {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    .feed-slide.slide-in-up {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    .feed-slide.slide-out-down {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    .feed-slide.slide-in-down {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    /* Horizontal transitions (left/right - theme change) */
+    .feed-slide.slide-out-left {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    .feed-slide.slide-in-left {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    .feed-slide.slide-out-right {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    .feed-slide.slide-in-right {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    .feed-slide.active {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+    .feed-slide.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="bg-paper text-primary">
+  
+  <!-- ============================================
+       MAIN CONTAINER
+       - Mobile-first design (360px base)
+       - Centers on larger screens
+       ============================================ -->
+  <main class="relative mx-auto min-h-screen w-full max-w-[360px] bg-black overflow-hidden
+               md:max-w-[768px] lg:max-w-[1024px]">
+    
+    <!-- ==========================================
+         SWIPEABLE FEED CONTAINER (2D GRID)
+         - Swipe LEFT/RIGHT: navigate themes within category
+         - Swipe UP/DOWN: navigate between categories
+         ========================================== -->
+    <div id="feedContainer" class="feed-container absolute inset-0 z-0">
+      
+      <!-- ========== ROW 0: ARTS ========== -->
+      <!-- Arts - Slide 0: Cubism -->
+      <div class="feed-slide absolute inset-0 active" data-row="0" data-col="0">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/Pablo_Picasso%2C_1910%2C_Girl_with_a_Mandolin_%28Fanny_Tellier%29%2C_oil_on_canvas%2C_100.3_x_73.6_cm%2C_Museum_of_Modern_Art_New_York..jpg/330px-Pablo_Picasso%2C_1910%2C_Girl_with_a_Mandolin_%28Fanny_Tellier%29%2C_oil_on_canvas%2C_100.3_x_73.6_cm%2C_Museum_of_Modern_Art_New_York..jpg" 
+             alt="Cubism" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Arts - Slide 1: Impressionism -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="0" data-col="1">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Claude_Monet%2C_Impression%2C_soleil_levant.jpg/1280px-Claude_Monet%2C_Impression%2C_soleil_levant.jpg" 
+             alt="Impressionism" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Arts - Slide 2: Surrealism -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="0" data-col="2">
+        <img src="https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg" 
+             alt="Surrealism" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Arts - Slide 3: Abstract Expressionism -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="0" data-col="3">
+        <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/No._5%2C_1948.jpg" 
+             alt="Abstract Expressionism" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- ========== ROW 1: LITERATURE ========== -->
+      <!-- Literature - Slide 0: Shakespeare -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="1" data-col="0">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/William_Shakespeare_by_John_Taylor%2C_edited.jpg/500px-William_Shakespeare_by_John_Taylor%2C_edited.jpg" 
+             alt="Shakespeare" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Literature - Slide 1: Dostoyevsky -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="1" data-col="1">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Vasily_Perov_-_%D0%9F%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82_%D0%A4.%D0%9C.%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%B5%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_-_Google_Art_Project.jpg/500px-Vasily_Perov_-_%D0%9F%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82_%D0%A4.%D0%9C.%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%B5%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_-_Google_Art_Project.jpg" 
+             alt="Dostoyevsky" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Literature - Slide 2: Kafka -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="1" data-col="2">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Franz_Kafka%2C_1923.jpg/500px-Franz_Kafka%2C_1923.jpg" 
+             alt="Kafka" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Literature - Slide 3: Hemingway -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="1" data-col="3">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/ErnestHemingway.jpg/500px-ErnestHemingway.jpg" 
+             alt="Hemingway" class="w-full h-full object-cover" />
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- ========== ROW 2: SCIENCE ========== -->
+      <!-- Science - Slide 0: Quantum Physics (solid color background) -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="2" data-col="0" style="background-color: #534FA3;">
+        <!-- Gradient overlays for text legibility -->
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Science - Slide 1: Black Holes (solid color background) -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="2" data-col="1" style="background-color: #854848;">
+        <!-- Gradient overlays for text legibility -->
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+      <!-- Science - Slide 2: Evolution -->
+      <div class="feed-slide absolute inset-0 hidden" data-row="2" data-col="2" style="background-color: #82456A;">
+        <div class="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-black to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 h-[500px] bg-gradient-to-t from-black to-transparent"></div>
+      </div>
+      
+
+    </div>
+    
+    <!-- Content wrapper - positioned above background -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- ==========================================
+         STATUS BAR
+         - Shows time and system icons
+         - CUSTOMIZE: Change time, add/remove icons
+         ========================================== -->
+    <header class="relative h-6 w-full px-4 flex items-center justify-between">
+      <!-- Time Display -->
+      <span class="font-roboto font-medium text-sm text-secondary">
+        08:10 <!-- CUSTOMIZE: Change time here -->
+      </span>
+      
+      <!-- System Icons (wifi, cellular, battery) -->
+      <div class="flex items-center gap-1">
+        <!-- WiFi Icon -->
+        <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-6.62-2.73L6.8 16.7c2.83-2.83 7.54-2.83 10.37 0l1.42-1.43c-3.61-3.62-9.56-3.62-13.21 0zM2.93 10.52l1.41 1.41c4.24-4.24 11.08-4.24 15.32 0l1.41-1.41c-5-5-13.14-5-18.14 0zm2.86 2.86l1.42 1.41c2.54-2.54 6.65-2.54 9.19 0l1.41-1.41c-3.3-3.3-8.72-3.3-12.02 0z"/>
+        </svg>
+        <!-- Cellular Icon -->
+        <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M2 22h20V2z"/>
+        </svg>
+        <!-- Battery Icon -->
+        <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
+        </svg>
+      </div>
+    </header>
+
+    <!-- ==========================================
+         APP BAR / HEADER
+         - Contains logo and action icons
+         - CUSTOMIZE: Replace logo, modify icons
+         ========================================== -->
+    <nav class="w-full pl-4 pr-4 pt-6 pb-4 flex items-center justify-between">
+      <!-- Logo Section -->
+      <div class="flex items-center">
+        <!-- CUSTOMIZE: Replace with your logo -->
+        <img src="img/wikipedia-logo.svg" alt="Wikipedia" class="w-[100%] h-[24px]" />
+      </div>
+      
+      <!-- Action Icons -->
+      <div class="flex items-center gap-6">
+    
+        
+        <!-- Notifications Icon with Badge -->
+        <button class="w-6 h-6 relative text-primary hover:text-secondary transition-colors" aria-label="Notifications">
+          <svg fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+          </svg>
+          <!-- Notification Badge - CUSTOMIZE: Change number or hide -->
+          <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] font-roboto-mono font-bold flex items-center justify-center text-white">
+            8
+          </span>
+        </button>
+    
+      </div>
+    </nav>
+
+    <!-- ==========================================
+         TAB GROUP / NAVIGATION TABS
+         - Toggle between "Community" and "For you"
+         - Language selector on the right
+         - CUSTOMIZE: Add/remove tabs, change labels
+         ========================================== -->
+    <div class="w-full h-10 px-4 flex items-center justify-between">
+      <!-- Tab Buttons -->
+      <div class="flex items-center">
+        <!-- Tab 1: Community - CUSTOMIZE: Change label -->
+        <button class="px-4 py-2 font-roboto font-semibold text-sm text-primary/70 hover:text-primary transition-colors">
+          Community
+        </button>
+        
+        <!-- Tab 2: For you (Active) - CUSTOMIZE: Change label -->
+        <button class="px-4 py-2 font-roboto font-semibold text-sm text-primary relative">
+          For you
+          <!-- Active Indicator -->
+          <span class="absolute bottom-0 left-2 right-2 h-[3px] bg-primary rounded-full"></span>
+        </button>
+      </div>
+      
+      <!-- Language Selector - CUSTOMIZE: Change language code -->
+      <button class="flex items-center gap-1 px-1 py-1 border border-secondary rounded-lg hover:bg-white/10 transition-colors">
+        <span class="w-5 h-5 bg-secondary rounded text-[11px] font-roboto font-semibold text-black flex items-center justify-center">
+          EN <!-- CUSTOMIZE: Language code -->
+        </span>
+        <!-- Chevron Down -->
+        <svg class="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ==========================================
+         MAIN CONTENT / FEED CARDS (2D GRID)
+         - Swipe LEFT/RIGHT changes theme content
+         - Swipe UP/DOWN changes category
+         ========================================== -->
+    <section id="contentContainer" class="flex-1 relative w-full">
+      
+      <!-- ========== ROW 0: ARTS ========== -->
+      <!-- Arts - Content 0: Cubism -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 active" data-row="0" data-col="0">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Arts</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Cubism</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">1/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Cubist subjects are analyzed, broken up, and reassembled in an abstract form. Instead of depicting objects from a single perspective, the artist depicts the subject from multiple perspectives.</p>
+      </div>
+      
+      <!-- Arts - Content 1: Impressionism -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="0" data-col="1">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Arts</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Impressionism</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">2/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Impressionism is a 19th-century art movement characterized by small, thin brush strokes, emphasis on accurate depiction of light, and ordinary subject matter in outdoor settings.</p>
+      </div>
+      
+      <!-- Arts - Content 2: Surrealism -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="0" data-col="2">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Arts</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Surrealism</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">3/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Surrealism is a cultural movement featuring unexpected juxtapositions, dreamlike imagery, and the element of surprise to unlock the creative potential of the unconscious mind.</p>
+      </div>
+      
+      <!-- Arts - Content 3: Abstract Expressionism -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="0" data-col="3">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Arts</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Abstract Expressionism</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">4/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Abstract Expressionism is a post-World War II art movement characterized by gestural brush strokes, spontaneous expression, and emphasis on the physical act of painting itself.</p>
+      </div>
+      
+      <!-- ========== ROW 1: LITERATURE ========== -->
+      <!-- Literature - Content 0: Shakespeare -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="1" data-col="0">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Literature</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">William Shakespeare</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">1/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">William Shakespeare was an English playwright and poet, widely regarded as the greatest writer in the English language and the world's greatest dramatist.</p>
+      </div>
+      
+      <!-- Literature - Content 1: Dostoyevsky -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="1" data-col="1">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Literature</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Fyodor Dostoyevsky</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">2/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Fyodor Dostoyevsky was a Russian novelist and philosopher whose psychological exploration of the human soul had a profound influence on world literature.</p>
+      </div>
+      
+      <!-- Literature - Content 2: Kafka -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="1" data-col="2">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Literature</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Franz Kafka</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">3/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Franz Kafka was a German-speaking Bohemian novelist whose work fuses elements of realism and the fantastic, exploring themes of alienation, existential anxiety, and absurdity.</p>
+      </div>
+      
+      <!-- Literature - Content 3: Hemingway -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="1" data-col="3">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Literature</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Ernest Hemingway</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">4/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg">Ernest Hemingway was an American novelist known for his economical, understated style that influenced 20th-century fiction. He won the Nobel Prize in Literature in 1954.</p>
+      </div>
+      
+      <!-- ========== ROW 2: SCIENCE ========== -->
+      <!-- Science - Content 0: Quantum Physics -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="2" data-col="0">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Science</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Quantum Physics</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">1/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg space-y-3">
+          <p>Quantum physics describes nature at the smallest scales of atoms and subatomic particles. It reveals bizarre phenomena like wave-particle duality, superposition, and quantum entanglement—what Einstein called "spooky action at a distance."</p>
+          <p>Unlike classical physics, quantum mechanics shows that particles can exist in multiple states simultaneously until observed. This principle, known as superposition, forms the basis of quantum computing.</p>
+          <p>The uncertainty principle, formulated by Werner Heisenberg, states that we cannot simultaneously know both the exact position and momentum of a particle. This isn't a limitation of our instruments—it's a fundamental property of nature.</p>
+          <p>Today, quantum physics underpins technologies like lasers, semiconductors, MRI machines, and is paving the way for revolutionary quantum ...</p>
+        </div>
+      </div>
+      
+      <!-- Science - Content 1: Black Holes -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="2" data-col="1">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Science</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Black Holes</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">2/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg space-y-3">
+          <p>A black hole is a region of spacetime where gravity is so strong that nothing—not even light or other electromagnetic waves—can escape once past the event horizon. These cosmic phenomena represent some of the most extreme and mysterious objects in our universe.</p>
+          <p>Black holes form when massive stars collapse at the end of their life cycle. The boundary around a black hole, called the event horizon, marks the point of no return for anything that crosses it.</p>
+          <p>At the center lies the singularity, a point of infinite density where our understanding of physics breaks down. Stephen Hawking discovered that black holes emit radiation and slowly evaporate over time.</p>
+          <p>In 2019, the Event Horizon Telescope captured the first image of a black hole in galaxy M87, confirming Einstein's predictions about these cosmic phenomena.</p>
+        </div>
+      </div>
+      
+      <!-- Science - Content 2: Evolution -->
+      <div class="feed-slide absolute inset-0 flex flex-col justify-end p-4 pb-24 md:p-8 md:pb-28 lg:p-12 lg:pb-32 hidden" data-row="2" data-col="2">
+        <p class="font-roboto font-medium text-xs text-secondary tracking-wide mb-1">Because you follow Science</p>
+        <div class="flex items-start justify-between gap-4 mb-2">
+          <h1 class="font-roboto font-medium text-2xl text-primary leading-tight flex-1 md:text-3xl lg:text-4xl">Evolution</h1>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="slide-counter px-2 py-0.5 border border-primary rounded-full text-sm font-roboto font-medium text-primary">3/4</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="More options">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="font-roboto font-normal text-sm text-primary leading-5 tracking-[0.25px] max-w-prose md:text-base lg:text-lg space-y-3">
+          <p>Evolution is the change in heritable characteristics of biological populations over successive generations. Charles Darwin's theory of natural selection, published in 1859 in "On the Origin of Species," revolutionized our understanding of life on Earth.</p>
+          <p>Natural selection operates on the principle that organisms with traits better suited to their environment are more likely to survive and reproduce. Over millions of years, this process has given rise to the incredible diversity of life we see today.</p>
+          <p>The fossil record, comparative anatomy, and DNA evidence all provide overwhelming support for evolution. Modern genetics has revealed how mutations create variation, while natural selection and genetic drift shape populations over time.</p>
+          <p>Human evolution traces back approximately 6 million years to our common ancestor with chimpanzees. The discovery of fossils like Lucy (Australopithecus afarensis) and recent DNA analysis have illuminated our species' remarkable journey through Africa and across the globe.</p>
+        </div>
+      </div>
+      
+      
+    </section>
+    
+    </div><!-- End of content wrapper (z-10) -->
+
+    <!-- ==========================================
+         BOTTOM TOOLBAR / NAVIGATION BAR
+         - 5 navigation items
+         - CUSTOMIZE: Add/remove items, change icons/labels
+         ========================================== -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[360px] bg-paper border-t border-border-color z-50
+                md:max-w-[768px] lg:max-w-[1024px]">
+      
+      <div class="flex items-start justify-around pt-2 pb-1">
+        
+        <!-- Nav Item 1: Home (Active) - CUSTOMIZE: Change icon/label -->
+        <a href="#" class="flex flex-col items-center gap-1 w-16">
+          <span class="px-4 py-1 bg-progressive/20 rounded-full">
+            <span class="material-symbols-outlined text-[24px] text-progressive" style="font-variation-settings: 'FILL' 1;">home</span>
+          </span>
+          <span class="text-[10px] font-roboto font-medium text-progressive">Home</span>
+        </a>
+        
+        <!-- Nav Item 2: Saved - CUSTOMIZE: Change icon/label -->
+        <a href="#" class="flex flex-col items-center gap-1 w-16">
+          <span class="px-4 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[24px] text-primary">bookmark</span>
+          </span>
+          <span class="text-[10px] font-roboto font-medium text-primary">Saved</span>
+        </a>
+        
+        <!-- Nav Item 3: Search - CUSTOMIZE: Change icon/label -->
+        <a href="#" class="flex flex-col items-center gap-1 w-16">
+          <span class="px-4 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[24px] text-secondary">search</span>
+          </span>
+          <span class="text-[10px] font-roboto font-medium text-secondary">Search</span>
+        </a>
+        
+        <!-- Nav Item 4: Activity - CUSTOMIZE: Change icon/label -->
+        <a href="#" class="flex flex-col items-center gap-1 w-16">
+          <span class="px-4 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[24px] text-secondary">search_activity</span>
+          </span>
+          <span class="text-[10px] font-roboto font-medium text-secondary">Activity</span>
+        </a>
+        
+        <!-- Nav Item 5: More - CUSTOMIZE: Change icon/label -->
+        <a href="#" class="flex flex-col items-center gap-1 w-16">
+          <span class="px-4 py-1 rounded-full">
+            <span class="material-symbols-outlined text-[24px] text-secondary">menu</span>
+          </span>
+          <span class="text-[10px] font-roboto font-medium text-secondary">More</span>
+        </a>
+      </div>
+      
+      <!-- Home Indicator Bar (Mobile) -->
+      <div class="flex justify-center pb-2 pt-1">
+        <div class="w-16 h-1 bg-secondary/50 rounded-full"></div>
+      </div>
+    </nav>
+
+  </main>
+  
+  <!-- ==========================================
+       2D SWIPE NAVIGATION JAVASCRIPT
+       - LEFT/RIGHT: Navigate themes within category
+       - UP/DOWN: Navigate between categories
+       ========================================== -->
+  <script>
+    (function() {
+      const feedContainer = document.getElementById('feedContainer');
+      const contentContainer = document.getElementById('contentContainer');
+      
+      // Grid configuration - CUSTOMIZE: Update when adding rows/columns
+      const totalRows = 3;    // Number of categories (Arts, Literature, Science)
+      const totalCols = 4;    // Number of themes per category
+      
+      let currentRow = 0;
+      let currentCol = 0;
+      let isAnimating = false;
+      
+      // Touch/mouse tracking
+      let startX = 0;
+      let startY = 0;
+      const swipeThreshold = 50;
+
+      function getSlide(container, row, col) {
+        return container.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+      }
+
+      function goToPosition(newRow, newCol, direction) {
+        if (isAnimating) return;
+        if (newRow < 0 || newRow >= totalRows) return;
+        if (newCol < 0 || newCol >= totalCols) return;
+        if (newRow === currentRow && newCol === currentCol) return;
+        
+        isAnimating = true;
+        
+        const currentImageSlide = getSlide(feedContainer, currentRow, currentCol);
+        const nextImageSlide = getSlide(feedContainer, newRow, newCol);
+        const currentContentSlide = getSlide(contentContainer, currentRow, currentCol);
+        const nextContentSlide = getSlide(contentContainer, newRow, newCol);
+        
+        if (!currentImageSlide || !nextImageSlide || !currentContentSlide || !nextContentSlide) {
+          isAnimating = false;
+          return;
+        }
+        
+        // Determine animation classes based on direction
+        let slideInClass, slideOutClass;
+        switch(direction) {
+          case 'up':
+            slideInClass = 'slide-in-up';
+            slideOutClass = 'slide-out-up';
+            break;
+          case 'down':
+            slideInClass = 'slide-in-down';
+            slideOutClass = 'slide-out-down';
+            break;
+          case 'left':
+            slideInClass = 'slide-in-left';
+            slideOutClass = 'slide-out-left';
+            break;
+          case 'right':
+            slideInClass = 'slide-in-right';
+            slideOutClass = 'slide-out-right';
+            break;
+        }
+        
+        // Set initial position for incoming slide
+        nextImageSlide.className = `feed-slide absolute inset-0 ${slideInClass}`;
+        nextContentSlide.className = nextContentSlide.className.replace(/slide-in-\w+|slide-out-\w+|active|hidden/g, '').trim() + ` ${slideInClass}`;
+        
+        // Force reflow
+        void nextImageSlide.offsetWidth;
+        void nextContentSlide.offsetWidth;
+        
+        // Animate out current slide
+        currentImageSlide.className = `feed-slide absolute inset-0 ${slideOutClass}`;
+        currentContentSlide.className = currentContentSlide.className.replace(/active|hidden/g, '').trim() + ` ${slideOutClass}`;
+        
+        // Animate in next slide
+        nextImageSlide.className = 'feed-slide absolute inset-0 active';
+        nextContentSlide.className = nextContentSlide.className.replace(/slide-in-\w+|slide-out-\w+/g, '').trim() + ' active';
+        
+        // Hide old slide after animation
+        setTimeout(() => {
+          currentImageSlide.className = 'feed-slide absolute inset-0 hidden';
+          currentContentSlide.className = currentContentSlide.className.replace(/slide-out-\w+/g, '').trim() + ' hidden';
+        }, 400);
+        
+        currentRow = newRow;
+        currentCol = newCol;
+        
+        // Reset animation lock
+        setTimeout(() => {
+          isAnimating = false;
+        }, 400);
+      }
+
+      // Navigation functions
+      function nextTheme() { goToPosition(currentRow, currentCol + 1, 'left'); }      // Swipe left = next theme
+      function prevTheme() { goToPosition(currentRow, currentCol - 1, 'right'); }     // Swipe right = prev theme
+      function nextCategory() { goToPosition(currentRow + 1, currentCol, 'up'); }     // Swipe up = next category
+      function prevCategory() { goToPosition(currentRow - 1, currentCol, 'down'); }   // Swipe down = prev category
+
+      // Touch events
+      document.addEventListener('touchstart', (e) => {
+        startX = e.changedTouches[0].screenX;
+        startY = e.changedTouches[0].screenY;
+      }, { passive: true });
+
+      document.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].screenX;
+        const endY = e.changedTouches[0].screenY;
+        const deltaX = startX - endX;
+        const deltaY = startY - endY;
+        
+        // Determine dominant direction
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          // Horizontal swipe
+          if (Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX > 0) {
+              nextTheme(); // Swipe left
+            } else {
+              prevTheme(); // Swipe right
+            }
+          }
+        } else {
+          // Vertical swipe
+          if (Math.abs(deltaY) > swipeThreshold) {
+            if (deltaY > 0) {
+              nextCategory(); // Swipe up
+            } else {
+              prevCategory(); // Swipe down
+            }
+          }
+        }
+      }, { passive: true });
+
+      // Mouse drag for desktop
+      let isDragging = false;
+      
+      document.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        document.body.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
+      });
+
+      document.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        
+        const deltaX = startX - e.clientX;
+        const deltaY = startY - e.clientY;
+        
+        // Determine dominant direction
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          if (Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX > 0) {
+              nextTheme();
+            } else {
+              prevTheme();
+            }
+          }
+        } else {
+          if (Math.abs(deltaY) > swipeThreshold) {
+            if (deltaY > 0) {
+              nextCategory();
+            } else {
+              prevCategory();
+            }
+          }
+        }
+      });
+
+      // Mouse wheel
+      let wheelTimeout;
+      document.addEventListener('wheel', (e) => {
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            // Horizontal scroll
+            if (e.deltaX > 30) nextTheme();
+            else if (e.deltaX < -30) prevTheme();
+          } else {
+            // Vertical scroll
+            if (e.deltaY > 30) nextCategory();
+            else if (e.deltaY < -30) prevCategory();
+          }
+        }, 50);
+      }, { passive: true });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+          case 'ArrowUp':
+            prevCategory();
+            break;
+          case 'ArrowDown':
+            nextCategory();
+            break;
+          case 'ArrowLeft':
+            prevTheme();
+            break;
+          case 'ArrowRight':
+            nextTheme();
+            break;
+        }
+      });
+    })();
+  </script>
+  
+</body>
+</html>
