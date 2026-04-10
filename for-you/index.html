@@ -649,8 +649,8 @@
       // Navigation functions
       function nextTheme() { goToPosition(currentRow, currentCol + 1, 'left'); }      // Swipe left = next theme
       function prevTheme() { goToPosition(currentRow, currentCol - 1, 'right'); }     // Swipe right = prev theme
-      function nextCategory() { goToPosition(currentRow + 1, currentCol, 'up'); }     // Swipe up = next category
-      function prevCategory() { goToPosition(currentRow - 1, currentCol, 'down'); }   // Swipe down = prev category
+      function nextCategory() { goToPosition(currentRow + 1, 0, 'up'); }              // Swipe up = next category (always first slide)
+      function prevCategory() { goToPosition(currentRow - 1, 0, 'down'); }            // Swipe down = prev category (always first slide)
 
       // Touch events
       document.addEventListener('touchstart', (e) => {
