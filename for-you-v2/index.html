@@ -207,13 +207,30 @@
           style="position:fixed; top:10px; right:10px; z-index:9999; padding:8px 12px; background:#3366CC; color:white; border:none; border-radius:8px; cursor:pointer; transition: opacity 0.3s;">
     Fullscreen
   </button>
+  <!-- Tooltip for iOS fullscreen suggestion -->
+  <div id="iosTooltip" style="display:none; position:fixed; top:50px; right:10px; z-index:10000; background:#222; color:#fff; padding:12px 16px; border-radius:8px; font-size:15px; max-width:260px; box-shadow:0 2px 8px rgba(0,0,0,0.18);">
+    For fullscreen, tap <span style="font-weight:bold">Share</span> <span style="font-size:18px">&#x2191;</span> and choose <span style="font-weight:bold">Add to Home Screen</span>.<br><br>Then open from your Home Screen.
+  </div>
   
   <script>
-    // Fullscreen functionality
+    // Fullscreen functionality with iOS detection and tooltip
     const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const iosTooltip = document.getElementById('iosTooltip');
     let lastTap = 0;
     
+    function isIOS() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.userAgent.includes('Macintosh') && 'ontouchend' in document);
+    }
+    
     function toggleFullscreen() {
+      if (isIOS()) {
+        // Show tooltip for iOS
+        iosTooltip.style.display = 'block';
+        setTimeout(() => {
+          iosTooltip.style.display = 'none';
+        }, 6000);
+        return;
+      }
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {

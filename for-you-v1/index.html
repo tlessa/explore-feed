@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wikipedia - For You Feed</title>
+  
+  <!-- iOS PWA Support for Fullscreen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="For You">
+  <meta name="mobile-web-app-capable" content="yes">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Roboto -->
@@ -192,43 +199,133 @@
     Fullscreen
   </button>
   
+  <!-- iOS Fullscreen Tooltip -->
+  <div id="iosTooltip" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10000; background:rgba(0,0,0,0.9); color:white; padding:24px; border-radius:16px; max-width:300px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+    <div style="font-size:18px; font-weight:600; margin-bottom:12px;">Fullscreen on iOS</div>
+    <div style="font-size:14px; line-height:1.5; color:#ccc; margin-bottom:16px;">
+      iOS Safari doesn't support fullscreen mode. For the best experience:
+      <ol style="text-align:left; margin-top:12px; padding-left:20px;">
+        <li style="margin-bottom:8px;">Tap the <strong>Share</strong> button <span style="font-size:18px;">⎙</span></li>
+        <li style="margin-bottom:8px;">Select <strong>"Add to Home Screen"</strong></li>
+        <li>Open the app from your home screen</li>
+      </ol>
+    </div>
+    <button onclick="document.getElementById('iosTooltip').style.display='none'" style="background:#3366CC; color:white; border:none; padding:10px 24px; border-radius:8px; font-size:14px; cursor:pointer;">Got it</button>
+  </div>
+
   <script>
-    // Fullscreen functionality
+    // Fullscreen functionality with iOS support
     const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const iosTooltip = document.getElementById('iosTooltip');
     let lastTap = 0;
     
-    function toggleFullscreen() {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        document.documentElement.requestFullscreen();
+    // Detect iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    // Check if running as standalone PWA (added to home screen)
+    const isStandalone = window.navigator.standalone === true || 
+                         window.matchMedia('(display-mode: standalone)').matches;
+    
+    // Check fullscreen support
+    const fullscreenSupported = document.documentElement.requestFullscreen || 
+                                 document.documentElement.webkitRequestFullscreen ||
+                                 document.documentElement.mozRequestFullScreen ||
+                                 document.documentElement.msRequestFullscreen;
+    
+    // Get the current fullscreen element (cross-browser)
+    function getFullscreenElement() {
+      return document.fullscreenElement || 
+             document.webkitFullscreenElement || 
+             document.mozFullScreenElement || 
+             document.msFullscreenElement;
+    }
+    
+    // Request fullscreen (cross-browser)
+    function requestFullscreen(element) {
+      if (element.requestFullscreen) {
+        return element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) {
+        return element.webkitRequestFullscreen();
+      } else if (element.mozRequestFullScreen) {
+        return element.mozRequestFullScreen();
+      } else if (element.msRequestFullscreen) {
+        return element.msRequestFullscreen();
       }
     }
     
-    // Hide button when entering fullscreen, show when exiting
-    document.addEventListener('fullscreenchange', () => {
-      if (document.fullscreenElement) {
+    // Exit fullscreen (cross-browser)
+    function exitFullscreen() {
+      if (document.exitFullscreen) {
+        return document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        return document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        return document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        return document.msExitFullscreen();
+      }
+    }
+    
+    function toggleFullscreen() {
+      // iOS doesn't support fullscreen API
+      if (isIOS && !fullscreenSupported) {
+        if (isStandalone) {
+          // Already running as PWA, hide the button
+          fullscreenBtn.style.display = 'none';
+        } else {
+          // Show iOS-specific instructions
+          iosTooltip.style.display = 'block';
+        }
+        return;
+      }
+      
+      if (getFullscreenElement()) {
+        exitFullscreen();
+      } else {
+        requestFullscreen(document.documentElement);
+      }
+    }
+    
+    // Hide fullscreen button if already running as standalone PWA on iOS
+    if (isIOS && isStandalone) {
+      fullscreenBtn.style.display = 'none';
+    }
+    
+    // Update button text on iOS to be more descriptive
+    if (isIOS && !isStandalone) {
+      fullscreenBtn.textContent = 'Add to Home';
+    }
+    
+    // Hide button when entering fullscreen, show when exiting (cross-browser)
+    function handleFullscreenChange() {
+      if (getFullscreenElement()) {
         fullscreenBtn.style.opacity = '0';
         fullscreenBtn.style.pointerEvents = 'none';
         fullscreenBtn.textContent = 'Exit';
       } else {
         fullscreenBtn.style.opacity = '1';
         fullscreenBtn.style.pointerEvents = 'auto';
-        fullscreenBtn.textContent = 'Fullscreen';
+        fullscreenBtn.textContent = isIOS ? 'Add to Home' : 'Fullscreen';
       }
-    });
+    }
+    
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
     
     // Double-tap to show button in fullscreen
     document.addEventListener('touchend', (e) => {
       const now = Date.now();
       if (now - lastTap < 300) {
         // Double tap detected
-        if (document.fullscreenElement) {
+        if (getFullscreenElement()) {
           fullscreenBtn.style.opacity = '1';
           fullscreenBtn.style.pointerEvents = 'auto';
           // Hide again after 3 seconds
           setTimeout(() => {
-            if (document.fullscreenElement) {
+            if (getFullscreenElement()) {
               fullscreenBtn.style.opacity = '0';
               fullscreenBtn.style.pointerEvents = 'none';
             }
@@ -240,16 +337,23 @@
     
     // Double-click for desktop
     document.addEventListener('dblclick', () => {
-      if (document.fullscreenElement) {
+      if (getFullscreenElement()) {
         fullscreenBtn.style.opacity = '1';
         fullscreenBtn.style.pointerEvents = 'auto';
         // Hide again after 3 seconds
         setTimeout(() => {
-          if (document.fullscreenElement) {
+          if (getFullscreenElement()) {
             fullscreenBtn.style.opacity = '0';
             fullscreenBtn.style.pointerEvents = 'none';
           }
         }, 3000);
+      }
+    });
+    
+    // Close iOS tooltip when clicking outside
+    iosTooltip.addEventListener('click', (e) => {
+      if (e.target === iosTooltip) {
+        iosTooltip.style.display = 'none';
       }
     });
   </script>
