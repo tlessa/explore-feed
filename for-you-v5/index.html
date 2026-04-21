@@ -13,6 +13,7 @@
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
   <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -139,6 +140,29 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 40; background-color: #FFFFFF;
     }
     .community-mode #communityContent { padding-top: 160px !important; }
+
+    .for-you-tutorial-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.72) 100%);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+    }
+
+    .for-you-tutorial-overlay.hidden {
+      display: none;
+    }
+
+    .tutorial-lottie-placeholder {
+      position: relative;
+      overflow: hidden;
+      background: transparent;
+    }
   </style>
 </head>
 
@@ -371,6 +395,10 @@
         <div class="bottom-gradient absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent"></div>
       </div>
     </div>
+
+    <div id="forYouTutorialOverlay" class="for-you-tutorial-overlay">
+      <div id="forYouTutorialLottie" class="tutorial-lottie-placeholder h-[200px] w-full max-w-sm" aria-label="Swipe tutorial animation"></div>
+    </div>
     
     <div class="relative z-10 flex flex-col min-h-screen">
 
@@ -489,7 +517,7 @@
         <div class="flex items-center gap-2 mb-2 relative">
           <span class="font-roboto font-medium text-xs text-secondary tracking-wide">Because you are interested in</span>
           <button id="interestChip" class="px-3 py-1 rounded-full border border-white/60 bg-white/10 text-white font-roboto font-medium text-xs flex items-center gap-1 hover:bg-white/20 transition-colors" style="backdrop-filter: blur(2px);" onclick="toggleInterestMenu(event)">
-            Artists
+            Visual arts
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-0" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
@@ -519,7 +547,7 @@
         <div class="flex items-center gap-2 mb-2 relative">
           <span class="font-roboto font-medium text-xs text-secondary tracking-wide">Because you are interested in</span>
           <button class="px-3 py-1 rounded-full border border-white/60 bg-white/10 text-white font-roboto font-medium text-xs flex items-center gap-1 hover:bg-white/20 transition-colors" style="backdrop-filter: blur(2px);" onclick="toggleInterestMenu(event)">
-            Artists
+            Visual arts
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-1" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
@@ -540,7 +568,7 @@
         <div class="flex items-center gap-2 mb-2 relative">
           <span class="font-roboto font-medium text-xs text-secondary tracking-wide">Because you are interested in</span>
           <button class="px-3 py-1 rounded-full border border-white/60 bg-white/10 text-white font-roboto font-medium text-xs flex items-center gap-1 hover:bg-white/20 transition-colors" style="backdrop-filter: blur(2px);" onclick="toggleInterestMenu(event)">
-            Artists
+            Visual arts
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-2" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
@@ -560,7 +588,7 @@
         <div class="flex items-center gap-2 mb-2 relative">
           <span class="font-roboto font-medium text-xs text-secondary tracking-wide">Because you are interested in</span>
           <button class="px-3 py-1 rounded-full border border-white/60 bg-white/10 text-white font-roboto font-medium text-xs flex items-center gap-1 hover:bg-white/20 transition-colors" style="backdrop-filter: blur(2px);" onclick="toggleInterestMenu(event)">
-            Artists
+            Visual arts
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-3" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
@@ -585,7 +613,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-1-0" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
           </div>
         </div>
@@ -605,7 +633,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-1-1" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
           </div>
         </div>
@@ -625,7 +653,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-1-2" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
           </div>
         </div>
@@ -645,7 +673,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-1-3" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
           </div>
         </div>
@@ -666,7 +694,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-2-0" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
           </div>
         </div>
@@ -686,7 +714,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-2-1" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
           </div>
         </div>
@@ -706,7 +734,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-2-2" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
           </div>
         </div>
@@ -726,7 +754,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-2-3" class="hidden absolute left-0 top-8 min-w-[120px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
           </div>
         </div>
@@ -748,7 +776,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-3-0" class="hidden absolute left-0 top-8 min-w-[140px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Visual arts')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Law')">Law</button>
@@ -770,7 +798,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-3-1" class="hidden absolute left-0 top-8 min-w-[140px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Law')">Law</button>
@@ -792,7 +820,7 @@
             <svg class="w-4 h-4 ml-1 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
           </button>
           <div id="interestMenu-3-2" class="hidden absolute left-0 top-8 min-w-[140px] bg-white rounded-lg shadow-lg z-50 py-1" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Artists</button>
+            <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Artists')">Visual arts</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Movies')">Movies</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('History')">History</button>
             <button class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100" onclick="jumpToCategory('Law')">Law</button>
@@ -1437,6 +1465,70 @@
     })();
 
     // Tab switching
+    let hasDismissedForYouTutorial = false;
+    let forYouTutorialAnimation = null;
+    const forYouTutorialAnimationSequence = ['animation-left-right.json', 'animation-top-bottom.json'];
+    let currentForYouTutorialAnimationIndex = 0;
+
+    function loadForYouTutorialAnimation(index, shouldAutoplay) {
+      const lottieContainer = document.getElementById('forYouTutorialLottie');
+      if (!lottieContainer || typeof lottie === 'undefined') return;
+
+      if (forYouTutorialAnimation) {
+        forYouTutorialAnimation.destroy();
+        forYouTutorialAnimation = null;
+      }
+
+      const animationPath = forYouTutorialAnimationSequence[index];
+      forYouTutorialAnimation = lottie.loadAnimation({
+        container: lottieContainer,
+        renderer: 'svg',
+        loop: false,
+        autoplay: shouldAutoplay,
+        path: animationPath
+      });
+
+      forYouTutorialAnimation.addEventListener('complete', () => {
+        const isLastAnimation = index >= forYouTutorialAnimationSequence.length - 1;
+        if (isLastAnimation) {
+          hasDismissedForYouTutorial = true;
+          setForYouTutorialOverlayVisible(false);
+          return;
+        }
+
+        currentForYouTutorialAnimationIndex = index + 1;
+        const overlayVisible = !document.getElementById('forYouTutorialOverlay')?.classList.contains('hidden');
+        loadForYouTutorialAnimation(currentForYouTutorialAnimationIndex, overlayVisible);
+      });
+    }
+
+    function initializeForYouTutorialAnimation() {
+      const lottieContainer = document.getElementById('forYouTutorialLottie');
+      if (!lottieContainer || forYouTutorialAnimation || typeof lottie === 'undefined') return;
+      currentForYouTutorialAnimationIndex = 0;
+      loadForYouTutorialAnimation(currentForYouTutorialAnimationIndex, true);
+    }
+
+    function setForYouTutorialOverlayVisible(isVisible) {
+      const overlay = document.getElementById('forYouTutorialOverlay');
+      if (!overlay) return;
+      overlay.classList.toggle('hidden', !isVisible);
+      if (!forYouTutorialAnimation) return;
+      if (isVisible) forYouTutorialAnimation.play();
+      else forYouTutorialAnimation.pause();
+    }
+
+    function maybeShowForYouTutorial() {
+      setForYouTutorialOverlayVisible(!hasDismissedForYouTutorial);
+    }
+
+    document.getElementById('closeForYouTutorial')?.addEventListener('click', () => {
+      hasDismissedForYouTutorial = true;
+      setForYouTutorialOverlayVisible(false);
+    });
+
+    initializeForYouTutorialAnimation();
+
     function switchTab(tab) {
       const communityTab = document.getElementById('communityTab');
       const forYouTab = document.getElementById('forYouTab');
@@ -1456,6 +1548,7 @@
         mainContainer.style.backgroundColor = '#FFFFFF';
         document.body.style.backgroundColor = '#FFFFFF';
         mainContainer.classList.add('community-mode');
+        setForYouTutorialOverlayVisible(false);
       } else {
         forYouTab.style.color = '#f8f9fa';
         forYouTab.innerHTML = 'For you<span class="tab-indicator absolute bottom-0 left-2 right-2 h-[3px] bg-primary rounded-full"></span>';
@@ -1467,6 +1560,7 @@
         mainContainer.style.backgroundColor = '#000000';
         document.body.style.backgroundColor = '#000000';
         mainContainer.classList.remove('community-mode');
+        maybeShowForYouTutorial();
       }
     }
 
@@ -1552,6 +1646,8 @@
       closeInterestMenu();
       return _switchTab(tab);
     };
+
+    maybeShowForYouTutorial();
   </script>
   
 </body>
